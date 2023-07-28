@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { IssueContext } from '../../../contexts/IssueContext'
+import { api } from '../../../libs/api'
 
 const searchFormSchema = z.object({
   query: z.string(),
@@ -10,16 +11,35 @@ const searchFormSchema = z.object({
 
 type SearchFormInputs = z.infer<typeof searchFormSchema>
 
+interface IssuesAmount {
+  open_issues: number
+}
+
 export function Search() {
   const { fetchIssues } = useContext(IssueContext)
 
-  const { register, handleSubmit } = useForm<SearchFormInputs>({
+  const { register, handleSubmit, reset } = useForm<SearchFormInputs>({
     resolver: zodResolver(searchFormSchema),
   })
 
   async function handleSearchIssues(data: SearchFormInputs) {
     await fetchIssues(data.query)
+    reset()
   }
+
+  const [amount, setAmount] = useState<IssuesAmount | undefined>(undefined)
+  async function catchUserData() {
+    try {
+      const response = await api.get('/repos/atilacsilva/Github-Blog')
+      setAmount(response.data)
+    } catch (error) {
+      console.error('Erro ao tentar carregar dados do usuário', error)
+    }
+  }
+
+  useEffect(() => {
+    catchUserData()
+  }, [])
 
   return (
     <section className="flex flex-col gap-3 w-full mt-[72px] mb-12">
@@ -27,7 +47,10 @@ export function Search() {
         <h3 className="text-lg font-bold font-body text-base-subtitle">
           Publicações
         </h3>
-        <span className="font-body text-sm text-base-span">6 publicações</span>
+
+        <span className="font-body text-sm text-base-span">
+          {amount && amount.open_issues} publicações
+        </span>
       </div>
       <form action="" onSubmit={handleSubmit(handleSearchIssues)}>
         <input

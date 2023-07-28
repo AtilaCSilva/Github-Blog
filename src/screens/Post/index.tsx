@@ -4,8 +4,9 @@ import speechBubbleIcon from '../../assets/bubble.svg'
 import LinkIcon from '../../assets/linkTo.svg'
 import { NavLink } from 'react-router-dom'
 import LessSign from '../../assets/less.svg'
+import { PostIssue } from './components/PostIssue'
 
-export function Issue() {
+export function Post() {
   return (
     <main className="flex justify-center">
       <section className=" max-w-5xl h-full flex flex-col mb-52">
@@ -55,20 +56,7 @@ export function Issue() {
             </ul>
           </div>
         </header>
-
-        <section className=" flex flex-col mt-12">
-          <p className="text-base">
-            Programming languages all have built-in data structures, but these
-            often differ from one language to another. This article attempts to
-            list the built-in data structures available in JavaScript and what
-            properties they have. These can be used to build other data
-            structures. Wherever possible, comparisons with other languages are
-            drawn. Dynamic typing JavaScript is a loosely typed and dynamic
-            language. Variables in JavaScript are not directly associated with
-            any particular value type, and any variable can be assigned (and
-            re-assigned) values of all types:
-          </p>
-        </section>
+        <PostIssue />
       </section>
     </main>
   )
